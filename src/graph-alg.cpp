@@ -1,21 +1,18 @@
 #include <stack>
 #include <queue>
-#include <utility>
 #include <vector>
+#include <boost/algorithm/cxx11/iota.hpp>
 #include "graph-alg.h"
-
+#include "graph.h"
 
     void
-    DeepFirstSearch(
-            const std::map< int, std::list<int> >& adjacencyLists,
+    Graph::Algorithm::DeepFirstSearch(
+            const std::vector< std::list<int> >& adjacencyLists,
             std::list<int>& visitedList,
             int vertex
             )
     {
-        std::map<int, bool> alreadyVisited;
-        for (auto vertexAndList : adjacencyLists)
-            alreadyVisited[vertexAndList.first] = false;
-
+        std::vector<bool> alreadyVisited(adjacencyLists.size(), false);
         std::stack<int> vertexStack;
         vertexStack.push(vertex);
 
@@ -33,16 +30,13 @@
     }
 
     void
-    BreadthFirstSearch(
-            const std::map<int, std::list<int> > &adjacencyLists,
+    Graph::Algorithm::BreadthFirstSearch(
+            const std::vector< std::list<int> > &adjacencyLists,
             std::list<int> &visitedList,
             int vertex
             )
     {
-        std::map<int, bool> alreadyVisited;
-        for (auto vertexAndList : adjacencyLists)
-            alreadyVisited[vertexAndList.first] = false;
-
+        std::vector<bool> alreadyVisited(adjacencyLists.size(), false);
         std::queue<int> vertexQueue;
         vertexQueue.push(vertex);
 
@@ -59,18 +53,31 @@
         }
     }
 
-    std::vector< wtEdge >
-    KruskalsFindMinSpTree(
-            const std::vector< wtEdge >& edges
+    std::vector< Graph::Edge >
+    Graph::Algorithm::KruskalsFindMinSpTree(
+            const std::vector< Edge >& edges,
+            size_t numVertex
             )
     {
-        std::vector<wtEdge> minSpTree;
-        std::vector<wtEdge> availableEdges(edges);
+        std::vector<Edge> minSpTree;
+        std::vector<int> components(numVertex);
+        boost::algorithm::iota(components.begin(), components.end(), 1);
+        int numComp = edges.size();
 
-        while (!availableEdges.empty())
-        {
-
+        for (auto edge : edges) {
+            if (numComp == 1) {
+                break;
+            }
+            if (components[edge.u] != components[edge.v]) {
+                for (int vertex = 0; vertex < numVertex; ++vertex) {
+                    if (components[vertex] == components[edge.v]) {
+                        components[vertex] = components[edge.u];
+                    }
+                --numComp;
+                minSpTree.push_back(edge);
+                }
+            }
         }
-
+        return minSpTree;
     }
 
