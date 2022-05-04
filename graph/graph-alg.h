@@ -29,6 +29,13 @@ namespace Graph { namespace Algorithm {
             size_t numVertex
             );
 
-}} // Graph::Algorithm
+    std::vector < double >
+    DijkstraShortedPath(
+            const std::vector< std::vector<double> >& wtMatrix,
+            int vertex,
+            size_t numVertex
+            );
+
+}} // namespace Graph::Algorithm
 
 #endif // GRAPH_ALG_H

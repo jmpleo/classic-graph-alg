@@ -2,9 +2,10 @@
 #define GRAPH_H
 
 namespace Graph {
-    struct Edge     { int u, v; };
-    struct WtEdge   { int u, v, weight; };
-} // Graph
 
+    struct Edge     { int u, v; };
+    struct WtEdge : public Edge  { double weight; };
+
+} // namespace Graph
 
 #endif // GRAPH_H

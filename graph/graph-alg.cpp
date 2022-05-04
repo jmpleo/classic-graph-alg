@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <stack>
 #include <queue>
 #include <vector>
@@ -22,7 +23,7 @@
             visitedList.push_back(vertex);
             alreadyVisited[vertex] = true;
 
-            for (auto adjacenctVertex : adjacencyLists[vertex]) {
+            for (int adjacenctVertex : adjacencyLists[vertex]) {
                 if (!alreadyVisited[vertex])
                     vertexStack.push(adjacenctVertex);
             }
@@ -46,7 +47,7 @@
             visitedList.push_back(vertex);
             alreadyVisited[vertex] = true;
 
-            for (auto adjacencyVertex : adjacencyLists[vertex]) {
+            for (int adjacencyVertex : adjacencyLists[vertex]) {
                 if (!alreadyVisited[vertex])
                     vertexQueue.push(adjacencyVertex);
             }
@@ -79,5 +80,49 @@
             }
         }
         return minSpTree;
+    }
+
+    std::vector< double >
+    Graph::Algorithm::DijkstraShortedPath(
+            const std::vector< std::vector<double> > &wtMatrix,
+            int vertex,
+            size_t numVertex
+            )
+    {
+        int vertexCount = 1;
+        int vertexMinDist, j, i;
+
+        std::vector<double> distances(numVertex);
+        for (i = 0; i < numVertex; ++i) {
+            distances[i] = wtMatrix[vertex][i];
+        }
+
+        std::vector<int> nearestVertex(numVertex, 0);
+        nearestVertex[vertex] = 1;
+
+        while (vertexCount < numVertex) {
+
+            j = 0;
+            while (nearestVertex[j] != 0) ++j;
+
+            vertexMinDist = j;
+            for (i = j + 1; i < numVertex; ++i) {
+                if (nearestVertex[i] == 0
+                    && distances[vertexMinDist] > distances[i]) {
+                        vertexMinDist = i;
+                }
+            }
+
+            nearestVertex[vertexMinDist] = 1;
+            ++vertexCount;
+
+            for (j = 1; j < numVertex; ++j) {
+                if (nearestVertex[j] == 0) {
+                    if (distances[j] > distances[vertexMinDist] + wtMatrix[vertexMinDist][j])
+                        distances[j] = distances[vertexMinDist] + wtMatrix[vertexMinDist][j];
+                }
+            }
+        }
+        return distances;
     }
 
