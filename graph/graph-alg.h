@@ -8,17 +8,15 @@
 
 namespace Graph { namespace Algorithm {
 
-    void
+    std::list< int >
     DeepFirstSearch(
             const std::vector< std::list<int> >& adjacencyList,
-            std::list< int >& visited,
             int startVertex
             );
 
-    void
+    std::list< int >
     BreadthFirstSearch(
             const std::vector< std::list<int> >& adjacencyList,
-            std::list< int >& visited,
             int startVertex
             );
 

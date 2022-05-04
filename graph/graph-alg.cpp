@@ -6,13 +6,13 @@
 #include "graph-alg.h"
 #include "graph.h"
 
-    void
+    std::list<int>
     Graph::Algorithm::DeepFirstSearch(
             const std::vector< std::list<int> >& adjacencyLists,
-            std::list<int>& visitedList,
             int vertex
             )
     {
+        std::list<int> visitedList;
         std::vector<bool> alreadyVisited(adjacencyLists.size(), false);
         std::stack<int> vertexStack;
         vertexStack.push(vertex);
@@ -30,13 +30,13 @@
         }
     }
 
-    void
+    std::list<int>
     Graph::Algorithm::BreadthFirstSearch(
             const std::vector< std::list<int> > &adjacencyLists,
-            std::list<int> &visitedList,
             int vertex
             )
     {
+        std::list<int> visitedList;
         std::vector<bool> alreadyVisited(adjacencyLists.size(), false);
         std::queue<int> vertexQueue;
         vertexQueue.push(vertex);
