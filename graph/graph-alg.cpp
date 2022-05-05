@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <cstdio>
+#include <iostream>
 #include <stack>
 #include <queue>
 #include <vector>
@@ -6,77 +8,84 @@
 #include "graph-alg.h"
 #include "graph.h"
 
-    std::list<int>
+    std::vector< size_t >
     Graph::Algorithm::DeepFirstSearch(
-            const std::vector< std::list<int> >& adjacencyLists,
-            int vertex
+            std::vector< std::vector< size_t >> const& adjacencyLists,
+            size_t vertex
             )
     {
-        std::list<int> visitedList;
-        std::vector<bool> alreadyVisited(adjacencyLists.size(), false);
-        std::stack<int> vertexStack;
+        std::vector< size_t > visitedList;
+        std::vector< bool > alreadyVisited(adjacencyLists.size(), false);
+        std::stack< size_t > vertexStack;
         vertexStack.push(vertex);
+        alreadyVisited[vertex] = true;
 
         while (!vertexStack.empty()) {
             vertex = vertexStack.top();
             vertexStack.pop();
             visitedList.push_back(vertex);
-            alreadyVisited[vertex] = true;
 
-            for (int adjacenctVertex : adjacencyLists[vertex]) {
-                if (!alreadyVisited[vertex])
-                    vertexStack.push(adjacenctVertex);
+            for (size_t adjacencyVertex : adjacencyLists[vertex]) {
+                if (!alreadyVisited[adjacencyVertex]) {
+                    alreadyVisited[adjacencyVertex] = true;
+                    vertexStack.push(adjacencyVertex);
+                }
             }
         }
+        return visitedList;
     }
 
-    std::list<int>
+    std::vector< size_t >
     Graph::Algorithm::BreadthFirstSearch(
-            const std::vector< std::list<int> > &adjacencyLists,
-            int vertex
+            std::vector< std::vector< size_t >> const &adjacencyLists,
+            size_t vertex
             )
     {
-        std::list<int> visitedList;
+        std::vector<size_t> visitedList;
         std::vector<bool> alreadyVisited(adjacencyLists.size(), false);
-        std::queue<int> vertexQueue;
+        std::queue<size_t> vertexQueue;
+        alreadyVisited[vertex] = true;
         vertexQueue.push(vertex);
 
         while (!vertexQueue.empty()) {
             vertex = vertexQueue.front();
             vertexQueue.pop();
             visitedList.push_back(vertex);
-            alreadyVisited[vertex] = true;
 
-            for (int adjacencyVertex : adjacencyLists[vertex]) {
-                if (!alreadyVisited[vertex])
+            for (size_t adjacencyVertex : adjacencyLists[vertex]) {
+                if (!alreadyVisited[adjacencyVertex]) {
+                    alreadyVisited[adjacencyVertex] = true;
                     vertexQueue.push(adjacencyVertex);
+                }
             }
         }
+        return visitedList;
     }
 
-    std::vector< Graph::Edge >
+    std::vector< Graph::WtEdge >
     Graph::Algorithm::KruskalsFindMinSpTree(
-            const std::vector< Edge >& edges,
+            std::vector< WtEdge >const & edges,
             size_t numVertex
             )
     {
-        std::vector<Edge> minSpTree;
-        std::vector<int> components(numVertex);
-        boost::algorithm::iota(components.begin(), components.end(), 1);
-        int numComp = edges.size();
+        std::vector<WtEdge> minSpTree;
+        std::vector<size_t> components(numVertex);
+        boost::algorithm::iota(components.begin(), components.end(), 0);
+        size_t numComp = edges.size();
 
         for (auto edge : edges) {
             if (numComp == 1) {
                 break;
             }
+
             if (components[edge.u] != components[edge.v]) {
-                for (int vertex = 0; vertex < numVertex; ++vertex) {
+                for (size_t vertex = 0; vertex < numVertex; ++vertex) {
                     if (components[vertex] == components[edge.v]) {
                         components[vertex] = components[edge.u];
                     }
+                }
                 --numComp;
                 minSpTree.push_back(edge);
-                }
             }
         }
         return minSpTree;
@@ -85,39 +94,39 @@
     std::vector< double >
     Graph::Algorithm::DijkstraShortedPath(
             const std::vector< std::vector<double> > &wtMatrix,
-            int vertex,
+            size_t vertex,
             size_t numVertex
             )
     {
-        int vertexCount = 1;
-        int vertexMinDist, j, i;
+        size_t vertexCount = 1;
+        size_t vertexMinDist, j, i;
 
         std::vector<double> distances(numVertex);
         for (i = 0; i < numVertex; ++i) {
             distances[i] = wtMatrix[vertex][i];
         }
 
-        std::vector<int> nearestVertex(numVertex, 0);
-        nearestVertex[vertex] = 1;
+        std::vector<bool> nearestVertex(numVertex, false);
+        nearestVertex[vertex] = true;
 
         while (vertexCount < numVertex) {
 
             j = 0;
-            while (nearestVertex[j] != 0) ++j;
+            while (nearestVertex[j] != false) ++j;
 
             vertexMinDist = j;
             for (i = j + 1; i < numVertex; ++i) {
-                if (nearestVertex[i] == 0
+                if (nearestVertex[i] == false
                     && distances[vertexMinDist] > distances[i]) {
                         vertexMinDist = i;
                 }
             }
 
-            nearestVertex[vertexMinDist] = 1;
+            nearestVertex[vertexMinDist] = true;
             ++vertexCount;
 
             for (j = 1; j < numVertex; ++j) {
-                if (nearestVertex[j] == 0) {
+                if (nearestVertex[j] == false) {
                     if (distances[j] > distances[vertexMinDist] + wtMatrix[vertexMinDist][j])
                         distances[j] = distances[vertexMinDist] + wtMatrix[vertexMinDist][j];
                 }

@@ -8,29 +8,29 @@
 
 namespace Graph { namespace Algorithm {
 
-    std::list< int >
+    std::vector< size_t >
     DeepFirstSearch(
-            const std::vector< std::list<int> >& adjacencyList,
-            int startVertex
+            std::vector< std::vector<size_t> > const& adjacencyList,
+            size_t startVertex
             );
 
-    std::list< int >
+    std::vector< size_t >
     BreadthFirstSearch(
-            const std::vector< std::list<int> >& adjacencyList,
-            int startVertex
+            std::vector< std::vector<size_t> > const& adjacencyList,
+            size_t startVertex
             );
 
     /// NOTE: expected that the edges are already sorted by weight
-    std::vector< Edge >
+    std::vector< WtEdge >
     KruskalsFindMinSpTree(
-            const std::vector< Edge >& edges,
+            std::vector< WtEdge > const& edges,
             size_t numVertex
             );
 
     std::vector < double >
     DijkstraShortedPath(
-            const std::vector< std::vector<double> >& wtMatrix,
-            int vertex,
+            std::vector< std::vector<double> > const& wtMatrix,
+            size_t vertex,
             size_t numVertex
             );
 
